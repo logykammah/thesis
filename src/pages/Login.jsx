@@ -415,7 +415,7 @@ export function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   autoComplete="current-password"
-                  placeholder="Demo: enter any password"
+                  placeholder="Enter your password"
                 />
               </div>
               <button type="submit" className="btn btn-primary login-portal-submit">

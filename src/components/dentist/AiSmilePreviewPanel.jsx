@@ -131,7 +131,7 @@ export function AiSmilePreviewPanel() {
     setAfterUrl('');
     setAfterManualUrl(DEMO_AFTER_URL);
     setAfterManualName(DEMO_AFTER_NAME);
-    pushToast('Demo after image applied.');
+    pushToast('Preview image applied.');
   };
 
   const save = () => {
@@ -202,7 +202,7 @@ export function AiSmilePreviewPanel() {
           Upload after image
         </button>
         <button type="button" className="btn btn-primary" onClick={generate} disabled={!beforeUrl && !sourceFile}>
-          Apply demo after image
+          Apply preview image
         </button>
         <button type="button" className="btn btn-secondary" onClick={save} disabled={!displayAfter || !patientId}>
           Save preview to patient profile
@@ -242,12 +242,12 @@ export function AiSmilePreviewPanel() {
             {beforeUrl ? <img src={beforeUrl} alt="Original smile" className="ai-smile-preview__img" /> : <div className="ai-smile-preview__placeholder">No image</div>}
           </div>
           <div className="ai-smile-preview__pane">
-            <span className="ai-smile-preview__label">{afterManualUrl && !afterUrl ? 'After (demo image)' : 'After (preview)'}</span>
+            <span className="ai-smile-preview__label">{afterManualUrl && !afterUrl ? 'After (preview image)' : 'After (preview)'}</span>
             {displayAfter ? (
               <img src={displayAfter} alt="After smile preview" className="ai-smile-preview__img" />
             ) : (
               <div className="ai-smile-preview__placeholder">
-                Upload a before image to auto-apply the demo after image
+                Upload a before image to auto-apply the saved preview image
               </div>
             )}
           </div>

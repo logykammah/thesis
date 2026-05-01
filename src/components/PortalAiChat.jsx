@@ -82,7 +82,7 @@ const DEMO_QA = {
     },
     {
       question: 'Which supplies are low stock?',
-      answer: 'Demo status: nitrile gloves and composite refill are flagged low and should be reordered.',
+      answer: 'Current status: nitrile gloves and composite refill are flagged low and should be reordered.',
       keywords: ['low stock', 'supplies', 'inventory'],
     },
   ],
@@ -133,7 +133,7 @@ export function PortalAiChat({ preset }) {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      text: 'Demo mode active. Ask one of the suggested questions to get a mapped answer.',
+      text: 'Assistant ready. Ask one of the suggested questions to get a mapped answer.',
     },
   ]);
 
@@ -184,7 +184,7 @@ export function PortalAiChat({ preset }) {
           </ul>
 
           <div className="portal-ai-chat__demo card" style={{ padding: '0.65rem', marginBottom: '0.6rem', fontSize: '0.82rem' }}>
-            <span className="muted">Try one of these demo questions:</span>
+            <span className="muted">Try one of these suggested questions:</span>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginTop: '0.45rem' }}>
               {quickQuestions.map((q) => (
                 <button key={q} type="button" className="btn btn-ghost btn-sm" onClick={() => askQuickQuestion(q)}>
@@ -204,7 +204,7 @@ export function PortalAiChat({ preset }) {
 
           <label className="form-row" style={{ marginBottom: '0.5rem' }}>
             <span className="muted" style={{ fontSize: '0.78rem' }}>
-              Message (demo mode — no backend/API)
+              Message (local mode — no backend/API)
             </span>
             <textarea
               className="textarea"

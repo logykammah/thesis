@@ -31,7 +31,7 @@ const PATIENTS = [
     emergencyContact: { name: 'Omar El-Sherif', relation: 'Spouse', phone: '0100 998 7766' },
     preferredBranchId: 'BR-DOKKI',
     medicalAttachment: null,
-    notes: 'Primary demo portal account',
+    notes: 'Primary portal account',
   },
   {
     id: 'P-002',

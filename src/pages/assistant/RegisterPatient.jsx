@@ -150,7 +150,7 @@ export function RegisterPatient() {
                   }}
                 />
                 <p className="muted" style={{ fontSize: '0.8rem', marginTop: '0.35rem' }}>
-                  Demo stores filename only; production would upload securely to the patient chart.
+                  This flow stores filename only; production would upload securely to the patient chart.
                 </p>
               </div>
             </div>
