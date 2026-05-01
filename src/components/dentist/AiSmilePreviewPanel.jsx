@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useAppData } from '../../context/AppDataContext';
 import { todayISODate } from '../../utils/format';
@@ -10,6 +10,7 @@ const DISCLAIMER =
 const MAX_BYTES = 8 * 1024 * 1024;
 const DEMO_AFTER_URL = '/demp-after.jpeg';
 const DEMO_AFTER_NAME = 'demp-after.jpeg';
+const PREVIEW_DELAY_MS = 3000;
 
 export function AiSmilePreviewPanel() {
   const { user } = useAuth();
@@ -17,6 +18,7 @@ export function AiSmilePreviewPanel() {
   const fileRef = useRef(null);
   const camRef = useRef(null);
   const afterFileRef = useRef(null);
+  const applyTimerRef = useRef(null);
 
   const [patientId, setPatientId] = useState('');
   const [beforeUrl, setBeforeUrl] = useState('');
@@ -29,6 +31,7 @@ export function AiSmilePreviewPanel() {
   const [afterManualName, setAfterManualName] = useState('');
   const [procedure, setProcedure] = useState(SMILE_PREVIEW_PROCEDURES[0]);
   const [fileName, setFileName] = useState('');
+  const [applyingPreview, setApplyingPreview] = useState(false);
 
   const displayAfter = afterUrl || afterManualUrl;
 
@@ -43,6 +46,15 @@ export function AiSmilePreviewPanel() {
   const patientOptions = useMemo(() => {
     return state.patients.filter((p) => linkedPatientIds.has(p.id)).sort((a, b) => a.fullName.localeCompare(b.fullName));
   }, [state.patients, linkedPatientIds]);
+
+  useEffect(() => {
+    return () => {
+      if (applyTimerRef.current) {
+        clearTimeout(applyTimerRef.current);
+        applyTimerRef.current = null;
+      }
+    };
+  }, []);
 
   const ingestFile = useCallback(
     (file) => {
@@ -64,12 +76,19 @@ export function AiSmilePreviewPanel() {
       reader.onload = () => {
         const url = typeof reader.result === 'string' ? reader.result : '';
         setBeforeUrl(url);
-        setAfterManualUrl(DEMO_AFTER_URL);
-        setAfterManualName(DEMO_AFTER_NAME);
+        setApplyingPreview(true);
+        if (applyTimerRef.current) clearTimeout(applyTimerRef.current);
+        applyTimerRef.current = setTimeout(() => {
+          setAfterManualUrl(DEMO_AFTER_URL);
+          setAfterManualName(DEMO_AFTER_NAME);
+          setApplyingPreview(false);
+          applyTimerRef.current = null;
+        }, PREVIEW_DELAY_MS);
         setAfterUrl('');
       };
       reader.onerror = () => {
         setSourceFile(null);
+        setApplyingPreview(false);
         pushToast('Could not read the image file.', 'error');
       };
       reader.readAsDataURL(file);
@@ -128,10 +147,18 @@ export function AiSmilePreviewPanel() {
       pushToast('Upload a smile photo first.', 'error');
       return;
     }
+    setApplyingPreview(true);
+    if (applyTimerRef.current) clearTimeout(applyTimerRef.current);
     setAfterUrl('');
-    setAfterManualUrl(DEMO_AFTER_URL);
-    setAfterManualName(DEMO_AFTER_NAME);
-    pushToast('Preview image applied.');
+    setAfterManualUrl('');
+    setAfterManualName('');
+    applyTimerRef.current = setTimeout(() => {
+      setAfterManualUrl(DEMO_AFTER_URL);
+      setAfterManualName(DEMO_AFTER_NAME);
+      setApplyingPreview(false);
+      pushToast('Preview image applied.');
+      applyTimerRef.current = null;
+    }, PREVIEW_DELAY_MS);
   };
 
   const save = () => {
@@ -247,7 +274,7 @@ export function AiSmilePreviewPanel() {
               <img src={displayAfter} alt="After smile preview" className="ai-smile-preview__img" />
             ) : (
               <div className="ai-smile-preview__placeholder">
-                Upload a before image to auto-apply the saved preview image
+                {applyingPreview ? 'Preparing preview image…' : 'Upload a before image to auto-apply the saved preview image'}
               </div>
             )}
           </div>
